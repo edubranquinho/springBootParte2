@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import br.com.alura.forum.config.security.AutenticacaoService;
 import br.com.alura.forum.config.security.AutenticacaoViaTokenFilter;
 import br.com.alura.forum.config.security.TokenService;
+import br.com.alura.forum.repository.UserRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -25,9 +26,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TokenService tokenService;
 
-    public SecurityConfig(AutenticacaoService autenticacaoService, TokenService tokenService) {
+    private final UserRepository userRepository;
+
+    public SecurityConfig(AutenticacaoService autenticacaoService, TokenService tokenService, UserRepository userRepository) {
         this.autenticacaoService = autenticacaoService;
         this.tokenService = tokenService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -49,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and().csrf().disable()
             .headers().frameOptions().disable()
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+            .and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
     }
 
     //Configurações de autenticação

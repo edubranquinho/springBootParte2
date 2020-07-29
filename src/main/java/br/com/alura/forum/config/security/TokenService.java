@@ -8,7 +8,6 @@ import java.util.Date;
 
 import br.com.alura.forum.modelo.Usuario;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -44,5 +43,10 @@ public class TokenService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public Long getIdUsuario(String token) {
+        final Claims body = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Long.parseLong(body.getSubject());
     }
 }
