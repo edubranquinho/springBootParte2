@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 import br.com.alura.forum.modelo.Usuario;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -33,5 +35,14 @@ public class TokenService {
             .signWith(SignatureAlgorithm.HS256, secret)
             .compact();
 
+    }
+
+    public boolean isTokenValido(String token) {
+        try {
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
